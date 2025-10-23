@@ -7,5 +7,5 @@ class CompanyAccount(Account): # Dziedziczenie
         self.balance = 0.0
 
     def express_outgoing_transfer(self, amount: int):
-        if 0 < amount <= self.balance and self.balance - (5 + amount) > 0:
+        if 0 < amount <= self.balance and self.balance - (5 + amount) >= -5:
             self.balance -= (amount + 5)

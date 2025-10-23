@@ -61,7 +61,7 @@ class PersonalAccount(Account):
         return year
     
     def express_outgoing_transfer(self, amount: int):
-        if 0 < amount <= self.balance and self.balance - (1 + amount) > 0:
+        if 0 < amount <= self.balance and self.balance - (1 + amount) >= -1:
             self.balance -= (amount + 1)
 
     
