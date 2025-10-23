@@ -45,5 +45,4 @@ class TestAccount:
         account = Account("John", "Doe", "44051401458")
         year_of_birth = Account.birth_year_from_pesel(account.pesel)
         assert year_of_birth < 1960
-        
 

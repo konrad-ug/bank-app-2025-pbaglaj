@@ -57,3 +57,12 @@ class Account:
 
         year = century + rr
         return year
+    
+    def incoming_transfer(self, amount: int):
+        if amount > 0:
+            self.balance += amount
+    
+    def outgoing_transfer(self, amount: int):
+        if self.balance - amount >= 0 and amount > 0:
+            self.balance -= amount
+    
