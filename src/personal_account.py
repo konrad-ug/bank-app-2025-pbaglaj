@@ -2,6 +2,7 @@ from src.account import Account
 
 class PersonalAccount(Account):
     def __init__(self, first_name, last_name, pesel, promo_code = None):
+        super().__init__()  # <-- zaciągamy history i balance z Account
         self.first_name = first_name
         self.last_name = last_name
         self.pesel = pesel if self.is_pesel_valid(pesel) else "Invalid"
