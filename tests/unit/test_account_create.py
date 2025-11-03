@@ -45,5 +45,43 @@ class TestAccount:
         account = Account("John", "Doe", "44051401458")
         year_of_birth = Account.birth_year_from_pesel(account.pesel)
         assert year_of_birth < 1960
-        
+
+    def test_valid_pesel_with_promo(self):
+        acc = Account("Jan", "Kowalski", "01210100000", "PROM_123")
+        assert acc.balance == 50
+
+    def test_invalid_pesel(self):
+        acc = Account("Jan", "Kowalski", "123", None)
+        assert acc.pesel == "Invalid"
+        assert acc.balance == 0
+
+    def test_promo_code_invalid_no_bonus(self):
+        acc = Account("Jan", "Kowalski", "01210100000", "BAD")
+        assert acc.balance == 0
+
+
+    def test_birth_year_1900s(self):
+        assert Account.birth_year_from_pesel("99010100000") == 1999
+
+    def test_birth_year_2000s(self):
+        assert Account.birth_year_from_pesel("01210100000") == 2001
+
+    def test_birth_year_2100s(self):
+        assert Account.birth_year_from_pesel("01410100000") == 2101
+
+    def test_birth_year_2200s(self):
+        assert Account.birth_year_from_pesel("01610100000") == 2201
+
+    def test_birth_year_1800s(self):
+        assert Account.birth_year_from_pesel("01810100000") == 1801
+
+    def test_pesel_not_string(self):
+        assert Account.birth_year_from_pesel(12345678901) is None
+
+    def test_birth_year_invalid(self):
+        assert Account.birth_year_from_pesel("99000000000") is None
+        assert Account.birth_year_from_pesel("bad") is None
+    
+    def test_invalid_month_range(self):
+        assert Account.birth_year_from_pesel("99130100000") is None
 

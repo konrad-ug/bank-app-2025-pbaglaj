@@ -34,26 +34,14 @@ class Account:
         mm_code = int(pesel[2:4])
 
         if 1 <= mm_code <= 12:
-            century = 1900
-            offset = 0
+            return 1900 + rr
         elif 21 <= mm_code <= 32:
-            century = 2000
-            offset = 20
+            return 2000 + rr
         elif 41 <= mm_code <= 52:
-            century = 2100
-            offset = 40
+            return 2100 + rr
         elif 61 <= mm_code <= 72:
-            century = 2200
-            offset = 60
+            return 2200 + rr
         elif 81 <= mm_code <= 92:
-            century = 1800
-            offset = 80
+            return 1800 + rr
         else:
             return None
-
-        month = mm_code - offset
-        if not (1 <= month <= 12):
-            return None
-
-        year = century + rr
-        return year
