@@ -52,4 +52,4 @@ class PersonalAccount(Account):
         if 0 < amount <= self.balance and self.balance - (1 + amount) >= -1:
             self.balance -= (amount + 1)
 
-    
+            
