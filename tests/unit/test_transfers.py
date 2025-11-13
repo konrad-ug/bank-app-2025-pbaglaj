@@ -1,11 +1,18 @@
 from src.personal_account import PersonalAccount
 from src.company_account import CompanyAccount
+import pytest
 
 class TestTransfers:
-    def test_incoming_transfer(self):
-        account = PersonalAccount("John", "Doe", "04310511001")
-        account.incoming_transfer(100.0)
-        assert account.balance == 100
+
+    @pytest.fixture()
+    def personalAccount(self):
+        personalAccount = PersonalAccount("John", "Doe", "04310511001")
+        return personalAccount
+
+
+    def test_incoming_transfer(self, personalAccount):
+        personalAccount.incoming_transfer(100.0)
+        assert personalAccount.balance == 100
 
     def test_negative_incoming_transfer(self):
         account = PersonalAccount("John", "Doe", "04310511001")
