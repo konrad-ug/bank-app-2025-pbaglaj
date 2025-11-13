@@ -57,8 +57,18 @@ class PersonalAccount(Account):
             self.history.append(-fee)
 
     def submit_for_loan(self, amount: int):
-        if((len(self.history) >= 3 and all(tx > 0 for tx in self.history[-3:])) or (len(self.history) >= 5 and sum(self.history[-5:]) > amount)):
+        if self._has_good_recent_history() or self._has_strong_balance_history(amount):
             self.balance += amount
             return True
-        else:
-            return False
+        return False
+
+
+    def _has_good_recent_history(self) -> bool:
+        """Sprawdza, czy 3 ostatnie transakcje są dodatnie."""
+        return len(self.history) >= 3 and all(tx > 0 for tx in self.history[-3:])
+
+
+    def _has_strong_balance_history(self, amount: int) -> bool:
+        """Sprawdza, czy suma 5 ostatnich transakcji przekracza żądaną kwotę pożyczki."""
+        return len(self.history) >= 5 and sum(self.history[-5:]) > amount
+

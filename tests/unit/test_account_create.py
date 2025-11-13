@@ -1,5 +1,6 @@
 from src.personal_account import PersonalAccount
 from src.account import Account
+import pytest
 
 class TestAccount:
     def test_account_creation(self):
@@ -9,32 +10,26 @@ class TestAccount:
         assert account.balance == 0.0
         assert account.pesel == "12345678901"
         
-    def test_pesel_too_long(self):
-        account = PersonalAccount("John", "Doe", "123456789011")
-        assert account.pesel == 'Invalid'
-
-    def test_pesel_too_short(self):
-        account = PersonalAccount("John", "Doe", "1234567890")
-        assert account.pesel == 'Invalid'
-
-    def test_pesel_none(self):
-        account = PersonalAccount("John", "Doe", "")
+    @pytest.mark.parametrize("pesel", [
+        "123456789011",  # too long
+        "1234567890",    # too short
+        "",              # empty
+    ])
+    def test_invalid_pesel(self, pesel):
+        account = PersonalAccount("John", "Doe", pesel)
         assert account.pesel == 'Invalid'
 
     def test_correct_promo_code(self):
         account = PersonalAccount("John", "Doe", "00302012345", "PROM_123")
         assert account.balance == 50
 
-    def test_promo_code_suffix_too_long(self):
-        account = PersonalAccount("John", "Doe", "12345678901", "PROM_XYZZ")
-        assert account.balance == 0.0
-
-    def test_promo_code_suffix_too_short(self):
-        account = PersonalAccount("John", "Doe", "12345678901", "PROM_XY")
-        assert account.balance == 0.0
-
-    def test_wrong_promo_code_prefix(self):
-        account = PersonalAccount("John", "Doe", "12345678901", "PRO_XYZ")
+    @pytest.mark.parametrize("promo_code", [
+        "PROM_XYZZ",  # suffix too long
+        "PROM_XY",    # suffix too short
+        "PRO_XYZ",    # wrong prefix
+    ])
+    def test_invalid_promo_code(self, promo_code):
+        account = PersonalAccount("John", "Doe", "12345678901", promo_code)
         assert account.balance == 0.0
 
     def test_pesel_after_1960(self):
@@ -61,20 +56,15 @@ class TestAccount:
         assert acc.balance == 0
 
 
-    def test_birth_year_1900s(self):
-        assert PersonalAccount.birth_year_from_pesel("99010100000") == 1999
-
-    def test_birth_year_2000s(self):
-        assert PersonalAccount.birth_year_from_pesel("01210100000") == 2001
-
-    def test_birth_year_2100s(self):
-        assert PersonalAccount.birth_year_from_pesel("01410100000") == 2101
-
-    def test_birth_year_2200s(self):
-        assert PersonalAccount.birth_year_from_pesel("01610100000") == 2201
-
-    def test_birth_year_1800s(self):
-        assert PersonalAccount.birth_year_from_pesel("01810100000") == 1801
+    @pytest.mark.parametrize("pesel,expected_year", [
+        ("99010100000", 1999),  # 1900s
+        ("01210100000", 2001),  # 2000s
+        ("01410100000", 2101),  # 2100s
+        ("01610100000", 2201),  # 2200s
+        ("01810100000", 1801),  # 1800s
+    ])
+    def test_birth_year_from_pesel(self, pesel, expected_year):
+        assert PersonalAccount.birth_year_from_pesel(pesel) == expected_year
 
     def test_pesel_not_string(self):
         assert PersonalAccount.birth_year_from_pesel(12345678901) is None
