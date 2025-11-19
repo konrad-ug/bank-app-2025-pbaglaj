@@ -12,3 +12,5 @@ group: 1
 
 
 ## How to execute tests
+
+python -m pytest
