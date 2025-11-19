@@ -79,3 +79,7 @@ class TestAccount:
     def test_account_initial_balance_zero(self):
         account = Account()
         assert account.balance == 0.0
+        
+    def test_account_initial_balance_with_value(self):
+        account = Account(100.0)
+        assert account.balance == 100.0
