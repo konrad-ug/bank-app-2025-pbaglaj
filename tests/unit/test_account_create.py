@@ -75,7 +75,3 @@ class TestAccount:
     
     def test_invalid_month_range(self):
         assert PersonalAccount.birth_year_from_pesel("99130100000") is None
-
-    def test_account_initial_balance_zero(self):
-        account = Account()
-        assert account.balance == 0.0

@@ -12,3 +12,16 @@ class CompanyAccount(Account): # Dziedziczenie
             self.balance -= (amount + fee)
             self.history.append(-amount)  # operacja główna
             self.history.append(-fee)    # oddzielna opłata
+
+    def submit_for_loan(self, amount: int):
+        if self._has_two_times_larger_balance(amount) and self._has_zus_transfer():
+            self.balance += amount
+            return True
+        return False
+
+    def _has_zus_transfer(self):
+        zus_transfer = -1775.0
+        return zus_transfer in self.history
+    
+    def _has_two_times_larger_balance(self, amount: int):
+        return self.balance >= 2 * amount
