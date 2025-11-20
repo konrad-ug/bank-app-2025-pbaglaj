@@ -33,3 +33,6 @@ class TestAccountRegistry:
     def test_return_amount_of_accounts(self, account_registry_with_account, account):
         amount_of_accounts = account_registry_with_account.return_amount_of_accounts()
         assert amount_of_accounts == 1
+
+    def test_find_account_by_pesel_not_found(self, account_registry):
+        assert account_registry.find_account_by_pesel("12345678901") is None
