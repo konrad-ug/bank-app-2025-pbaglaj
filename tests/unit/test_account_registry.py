@@ -1,5 +1,5 @@
 from src.personal_account import PersonalAccount
-from src.personal_account import AccountRegistry
+from src.account_registry import AccountRegistry
 import pytest
 
 class TestAccountRegistry:
