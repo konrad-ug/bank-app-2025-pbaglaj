@@ -36,3 +36,7 @@ class TestAccountRegistry:
 
     def test_find_account_by_pesel_not_found(self, account_registry):
         assert account_registry.find_account_by_pesel("12345678901") is None
+
+    def test_remove_account(self, account_registry_with_account, account):
+        account_registry_with_account.remove_account(account)
+        assert len(account_registry_with_account.accounts) == 0
