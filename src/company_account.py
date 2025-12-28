@@ -2,6 +2,7 @@ import os
 import requests
 from datetime import date
 from src.account import Account
+from smtp.smtp import SMTPClient
 
 class CompanyAccount(Account): # Dziedziczenie
     def __init__(self, company_name, nip):
@@ -54,3 +55,10 @@ class CompanyAccount(Account): # Dziedziczenie
     
     def _has_two_times_larger_balance(self, amount: int):
         return self.balance >= 2 * amount
+
+    def send_history_via_email(self, email_address: str) -> bool:
+        today = date.today().strftime("%Y-%m-%d")
+        subject = f"Account Transfer History {today}"
+        text = f"Company account history: {self.history}"
+        smtp_client = SMTPClient()
+        return smtp_client.send(subject, text, email_address)
