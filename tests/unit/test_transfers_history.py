@@ -1,6 +1,7 @@
 from src.personal_account import PersonalAccount
 from src.company_account import CompanyAccount
 from src.account import Account
+from unittest.mock import patch, Mock
 
 class TestTransfersHistory:
     def test_history_starts_empty(self):
@@ -20,7 +21,13 @@ class TestTransfersHistory:
         assert acc.history == [300, -100]
 
 
-    def test_company_express_transfer_records_fee_separately(self):
+    @patch('src.company_account.requests.get')
+    def test_company_express_transfer_records_fee_separately(self, mock_get):
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"result": {"subject": {"statusVat": "Czynny"}}}
+        mock_get.return_value = mock_response
+        
         comp = CompanyAccount("Test SA", "1234567890")
         comp.incoming_transfer(500)
         comp.express_outgoing_transfer(300)
@@ -35,7 +42,13 @@ class TestTransfersHistory:
         assert acc.history == []
 
 
-    def test_express_transfer_blocked_if_insufficient_funds(self):
+    @patch('src.company_account.requests.get')
+    def test_express_transfer_blocked_if_insufficient_funds(self, mock_get):
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"result": {"subject": {"statusVat": "Czynny"}}}
+        mock_get.return_value = mock_response
+        
         comp = CompanyAccount("Test SA", "1234567890")
         comp.express_outgoing_transfer(500)  # No balance
         assert comp.history == []

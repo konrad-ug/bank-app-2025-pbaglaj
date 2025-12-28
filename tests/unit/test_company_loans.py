@@ -1,9 +1,16 @@
 from src.company_account import CompanyAccount
+from unittest.mock import patch, Mock
 import pytest
+
 
 @pytest.fixture()
 def account():
-    return CompanyAccount('Gillette', '9581153134')
+    with patch('src.company_account.requests.get') as mock_get:
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"result": {"subject": {"statusVat": "Czynny"}}}
+        mock_get.return_value = mock_response
+        return CompanyAccount('Gillette', '9581153134')
 
 @pytest.fixture
 def zus_amount():
