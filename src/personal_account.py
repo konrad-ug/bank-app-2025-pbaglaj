@@ -1,4 +1,6 @@
+from datetime import date
 from src.account import Account
+from smtp.smtp import SMTPClient
 
 class PersonalAccount(Account):
     def __init__(self, first_name, last_name, pesel, promo_code = None):
@@ -71,3 +73,10 @@ class PersonalAccount(Account):
     def _has_strong_balance_history(self, amount: int) -> bool:
         """Sprawdza, czy suma 5 ostatnich transakcji przekracza żądaną kwotę pożyczki."""
         return len(self.history) >= 5 and sum(self.history[-5:]) > amount
+
+    def send_history_via_email(self, email_address: str) -> bool:
+        today = date.today().strftime("%Y-%m-%d")
+        subject = f"Account Transfer History {today}"
+        text = f"Personal account history: {self.history}"
+        smtp_client = SMTPClient()
+        return smtp_client.send(subject, text, email_address)
