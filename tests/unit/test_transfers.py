@@ -1,5 +1,6 @@
 from src.personal_account import PersonalAccount
 from src.company_account import CompanyAccount
+from unittest.mock import patch, Mock
 import pytest
 
 class TestTransfers:
@@ -41,7 +42,13 @@ class TestTransfers:
         account.express_outgoing_transfer(50.0)
         assert account.balance == 149.0
 
-    def test_express_company_transfer(self):
+    @patch('src.company_account.requests.get')
+    def test_express_company_transfer(self, mock_get):
+        mock_response = Mock()
+        mock_response.status_code = 200
+        mock_response.json.return_value = {"result": {"subject": {"statusVat": "Czynny"}}}
+        mock_get.return_value = mock_response
+        
         account = CompanyAccount("Gillette", "9581153134")
         account.balance = 200.0
         account.express_outgoing_transfer(50.0)

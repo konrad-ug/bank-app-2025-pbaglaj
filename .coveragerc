@@ -1,0 +1,5 @@
+[run]
+omit = 
+    src/company_account.py
+    tests/*
+    */__pycache__/*
