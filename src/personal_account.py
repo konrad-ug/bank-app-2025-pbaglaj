@@ -74,6 +74,16 @@ class PersonalAccount(Account):
         """Sprawdza, czy suma 5 ostatnich transakcji przekracza żądaną kwotę pożyczki."""
         return len(self.history) >= 5 and sum(self.history[-5:]) > amount
 
+    def to_dict(self):
+        return {
+            "type": "personal",
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "pesel": self.pesel,
+            "balance": self.balance,
+            "history": self.history
+        }
+
     def send_history_via_email(self, email_address: str) -> bool:
         today = date.today().strftime("%Y-%m-%d")
         subject = f"Account Transfer History {today}"
