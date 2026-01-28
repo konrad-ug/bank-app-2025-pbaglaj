@@ -56,6 +56,15 @@ class CompanyAccount(Account): # Dziedziczenie
     def _has_two_times_larger_balance(self, amount: int):
         return self.balance >= 2 * amount
 
+    def to_dict(self):
+        return {
+            "type": "company",
+            "company_name": self.company_name,
+            "nip": self.nip,
+            "balance": self.balance,
+            "history": self.history
+        }
+
     def send_history_via_email(self, email_address: str) -> bool:
         today = date.today().strftime("%Y-%m-%d")
         subject = f"Account Transfer History {today}"

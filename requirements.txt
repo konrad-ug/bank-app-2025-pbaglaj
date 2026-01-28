@@ -1,4 +1,6 @@
 pytest==8.4.2
+pytest-mock==3.14.0
 coverage==6.5.0
 requests==2.32.0
 flask==2.3.3
+pymongo==4.6.1
