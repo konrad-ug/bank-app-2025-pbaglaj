@@ -1,9 +1,16 @@
+import os
 from flask import Flask, request, jsonify
 from src.account_registry import AccountRegistry
 from src.personal_account import PersonalAccount
+from src.mongo_accounts_repository import MongoAccountsRepository
 
 app = Flask(__name__)
 registry = AccountRegistry()
+
+# MongoDB configuration
+MONGO_CONNECTION_STRING = os.getenv("MONGO_CONNECTION_STRING", "mongodb://localhost:27017")
+MONGO_DATABASE_NAME = os.getenv("MONGO_DATABASE_NAME", "bank_app")
+MONGO_COLLECTION_NAME = os.getenv("MONGO_COLLECTION_NAME", "accounts")
 
 @app.route("/api/accounts", methods=['POST'])
 def create_account():
@@ -99,3 +106,45 @@ def transfer_money(pesel):
     
     else:
         return jsonify({"error": "Invalid transfer type"}), 400
+
+@app.route("/api/accounts/save", methods=['POST'])
+def save_accounts_to_db():
+    try:
+        repo = MongoAccountsRepository(
+            connection_string=MONGO_CONNECTION_STRING,
+            database_name=MONGO_DATABASE_NAME,
+            collection_name=MONGO_COLLECTION_NAME
+        )
+        accounts = registry.return_all_accounts()
+        repo.save_all(accounts)
+        repo.close()
+        return jsonify({
+            "message": "Accounts saved to database",
+            "count": len(accounts)
+        }), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to save accounts: {str(e)}"}), 500
+
+
+@app.route("/api/accounts/load", methods=['POST'])
+def load_accounts_from_db():
+    try:
+        repo = MongoAccountsRepository(
+            connection_string=MONGO_CONNECTION_STRING,
+            database_name=MONGO_DATABASE_NAME,
+            collection_name=MONGO_COLLECTION_NAME
+        )
+        loaded_accounts = repo.load_all()
+        repo.close()
+        
+        registry.accounts.clear()
+        
+        for account in loaded_accounts:
+            registry.add_account(account)
+        
+        return jsonify({
+            "message": "Accounts loaded from database",
+            "count": len(loaded_accounts)
+        }), 200
+    except Exception as e:
+        return jsonify({"error": f"Failed to load accounts: {str(e)}"}), 500
