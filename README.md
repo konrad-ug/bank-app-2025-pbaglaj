@@ -10,7 +10,10 @@ group: 1
 
 ## How to start the app
 
+python -m flask --app app.api run
 
 ## How to execute tests
 
 python -m pytest
+
+behave
