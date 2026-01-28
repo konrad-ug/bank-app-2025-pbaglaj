@@ -14,8 +14,3 @@ class Account:
             self.balance -= amount
             self.history.append(-amount)  # zapis ujemny
 
-    def to_dict(self):
-        return {
-            "balance": self.balance,
-            "history": self.history
-        }
